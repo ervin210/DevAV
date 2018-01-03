@@ -1,0 +1,58 @@
+﻿@using DevAV.Models
+
+@{
+    Layout = "~/Views/Layout.cshtml";
+    ViewBag.Title = "Dashboard";
+    Dictionary<string, string> FilterMenu = new Dictionary<string, string>(){
+        {"All", "All"},
+        {"Video Players", "Video Players"},
+        {"Televisions", "Televisions"},
+        {"Monitors", "Monitors"},
+        {"Projectors", "Projectors"},
+        {"Automation", "Automation"}
+
+    };
+
+    ViewBag.FilterMenu = FilterMenu;
+    ViewBag.MenuHeader = "Category";
+
+    var db = new DevAVContext();
+    var allStates = db.States.Select(e => new { ID = e.Sate_ID, Name = e.State_Long, ShortName = e.State_Short });
+    var doughnutData = db.GetSalesData();
+    var funnelData = db.GetOpportunitiesData();
+
+}
+
+<script>
+    window.DevAV = window.DevAV || {};
+    DevAV.allStates = @Html.Raw(Json.Encode(allStates));
+    DevAV.doughnutData = @Html.Raw(Json.Encode(doughnutData));
+    DevAV.funnelData = @Html.Raw(Json.Encode(funnelData));
+    DevAV.allStatesByKey = {};
+
+    $.each(DevAV.allStates, function (_, item) {
+        DevAV.allStatesByKey[item.ID] = {
+            Name: item.Name,
+            ShortName: item.ShortName
+        }
+    });
+</script>
+
+<div class="revenue block">
+    <div class="caption">Revenue Analysis</div>
+    <div class="revenue-pivotgrid">
+        <div id="revenue-analysis"></div>
+    </div>
+</div>
+<div class="charts">
+    <div class="revenue-snapshot block">
+        <div class="caption">Revenue Snapshot (All Products)</div>
+        <div id="revenue-doughnut"></div>
+    </div>
+    <div class="opportunities-snapshot block">
+        <div class="caption">Opportunities Snapshot (All Products)</div>
+        <div id="opportunities-funnel"></div>
+    </div>
+</div>
+
+

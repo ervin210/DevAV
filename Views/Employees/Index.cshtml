@@ -1,0 +1,85 @@
+﻿@using DevAV.Models
+@using System.Linq
+
+@{
+    ViewBag.Title = "Employees";
+    Layout = "~/Views/Layout.cshtml";
+
+    Dictionary<string, string> FilterMenu = new Dictionary<string, string>(){
+        {"All", ""},
+        {"Salaried", "Salaried"},
+        {"Commission", "Commission"},
+        {"Terminated", "Terminated"}
+    };
+
+    ViewBag.FilterMenu = FilterMenu;
+    ViewBag.MenuHeader = "Favorites";
+
+    var db = new DevAVContext();
+    var states = db.States.Select(e => new { ID = e.Sate_ID, Short_Name = e.State_Short});
+    var departments = db.Departments.Select(e => new { ID = e.Department_ID, Name = e.Department_Name});
+    var employees = db.Employees.Select(e => new { ID = e.Employee_ID, Name = e.Employee_Full_Name });
+
+}
+
+<script>
+    window.DevAV = window.DevAV || {};
+    DevAV.states = @Html.Raw(Json.Encode(states));
+    DevAV.departments = @Html.Raw(Json.Encode(departments));
+    DevAV.employees = @Html.Raw(Json.Encode(employees));
+</script>
+
+<div id="grid" class="employee"></div>
+<div class="info employee">
+    <div class="about">
+        <div class="name"></div>
+        <div class="title"></div>
+        <div class="photo">
+            <div class="image"></div>
+            <div class="address">Address<br><span>&nbsp;</span></div>
+            <div class="phone">Phone<br><span>&nbsp;</span></div>
+            <div class="mail">Email<br><span>&nbsp;</span></div>
+        </div>
+    </div>
+    <div class="sections">
+        <div class="tabs"></div>
+        <div class="tabs-container">
+            <div class="tabs-content"></div>
+            <div class="popupInfo"></div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+
+<div id="edit-note-popup">
+    <div id="edit-note">
+        <div class="edit-label" id="note-edit-label"></div>
+        <div class="note-info"></div>
+        <div class="edit-actions">
+            <div id="note-save"></div>
+            <div id="note-cancel"></div>
+        </div>
+    </div>
+</div>
+
+<div id="edit-task-popup">
+    <div id="edit-task">
+        <div class="edit-label" id="task-edit-label"></div>
+        <div class="task-info"></div>
+        <div class="edit-actions">
+            <div id="task-save"></div>
+            <div id="task-cancel"></div>
+        </div>
+    </div>
+ </div>
+
+<div id="edit-employee-popup">
+    <div id="edit-employee">
+        <div class="edit-label" id="employee-edit-label"></div>
+        <div class="employee-info"></div>
+        <div class="edit-actions">
+            <div id="employee-save"></div>
+            <div id="employee-cancel"></div>
+        </div>
+    </div>
+</div>

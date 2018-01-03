@@ -1,0 +1,170 @@
+﻿@using System.Web.Optimization;
+
+@{
+    Dictionary<string, string[]> ActionMenu = new Dictionary<string, string[]>(){
+        {"button-new", new string[] {"Products", "Customers", "Employees", "Tasks"}},
+        {"button-delete", new string[] {"Products", "Customers", "Employees" }},
+        {"button-export", new string[] {"Dashboard", "Products", "Customers", "Employees", "Tasks"}},
+        {"button-task", new string[] {"Employees"}},
+        {"button-analysis", new string[] {"Products", "Customers"}},
+        {"button-custom-filter", new string[] {"Dashboard", "Products", "Customers", "Employees", "Tasks"}},
+        {"button-chooser", new string[] {"Products", "Customers", "Employees"}}
+   };
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>@ViewBag.Title / DevAV</title>
+
+    <link rel="stylesheet" href="~/css/dx.common.css" />
+    <link rel="stylesheet" href="~/css/tb.light.darkred.css" />
+    @Styles.Render(DevAv.App_Start.BundleConfig.Styles)
+
+
+    
+    <script type="text/javascript" src="~/js/jquery-3.1.0.min.js"></script>
+    
+    <script src="~/js/cldr.min.js"></script>
+    <script src="~/js/cldr/event.min.js"></script>
+    <script src="~/js/cldr/supplemental.min.js"></script>
+
+    <script src="~/js/globalize.min.js"></script>
+    <script src="~/js/globalize/message.min.js"></script>
+    <script src="~/js/globalize/number.min.js"></script>
+    <script src="~/js/globalize/currency.min.js"></script>
+    <script src="~/js/globalize/date.min.js"></script>
+
+    <script type="text/javascript" src="~/js/jszip.min.js"></script>
+
+    <script type="text/javascript" src="~/js/dx.viz-web.js"></script>
+
+    <script>
+        DevAV = window.DevAV || {};
+        DevAV.baseUrl = "@Url.Content("~/")";
+    </script>
+
+    <script type="text/javascript" src="~/scripts/scripts.js"></script>
+    <script type="text/javascript" src="~/scripts/@(ViewBag.Title.ToLower()).js"></script>
+
+    <!--[if lte IE 8]>
+    <script type="text/javascript">
+        $(function() {
+            DevAV.showIe8Notice();
+        });
+    </script>
+    <![endif]-->
+</head>
+<body>
+
+    <section class="layout-navigation">
+        <div class="site-logo">
+            <img src="~/images/logo.png" />
+            <div class="main-menu" id="@(ViewBag.Title)"></div>
+        </div>
+
+
+        <div class="left-menu">
+            <div class="menu-header">@ViewBag.MenuHeader</div>
+            <ul>
+                @foreach(var item in ViewBag.FilterMenu)
+                {
+                    <li><a href="#@item.Value">@item.Key</a></li>
+                }
+            </ul>
+        </div>
+        <div class="logo"></div>
+
+        <div class="left-menu" id="custom-filters">
+            <div class="menu-header">Custom Filters</div>
+            <div class="custom-filers-block">
+                <ul></ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="layout-content @ViewBag.Title.ToLower()">
+        <header class="header">
+            <div class="buttons">
+                @foreach(var action in ActionMenu)
+                {
+                    if(Array.Exists(action.Value, act => act == ViewBag.Title))
+                    {
+                        <div class="@action.Key"></div>
+                    }
+                }
+            </div>
+            <div class="search-box">
+                <div class="search"></div>
+                <div class="icon-find"></div>
+            </div>
+        </header>
+        <div class="main-content">
+            @RenderBody()
+        </div>
+        <footer class="footer">
+            <div class="copy">
+                Powered by DevExtreme&copy;<br />
+                <a href="https://js.devexpress.com/Download/" target="_blank">Download your free 30-day trial</a>
+            </div>
+            <div class="social">
+                <a target="_blank" href="https://www.facebook.com/DevExpress" class="facebook"></a>
+                <a target="_blank" href="https://twitter.com/DevExpress" class="twitter"></a>
+                <a target="_blank" href="https://plus.google.com/+devexpress/posts" class="google-plus"></a>
+                <a target="_blank" href="http://www.youtube.com/user/DeveloperExpress" class="youtube"></a>
+                <a target="_blank" href="https://community.devexpress.com/blogs/" class="blogs"></a>
+            </div>
+        </footer>
+    </section>
+
+    <section class="layout-popups">
+        <div id="disable-db-notice">
+            <div id="notice-content">
+                <div class="edit-label">
+                    Note
+                </div>
+                <div class="disable-db-notice-content">
+                    @Helpers.ReadOnlyNote
+                </div>
+                <div class="edit-actions">
+                    <div id="disable-db-notice-ok"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="edit-custom-filters" class="filterbuilder-popup">
+            <div id="edit-filter-content">
+                <div class="edit-label"></div>
+                <div class="filter-type-menu"></div>
+                <div class="filter-column-menu"></div>
+                <div class="filter-permission-menu"></div>
+                <div class="filter-options">
+                    <div class="filter-permissions"></div>
+                </div>
+                <div class="filter-save"></div>
+                <div class="filter-save-description">
+                    Save for future use
+                </div>
+                <div class="filter-name"></div>
+                <div class="edit-actions">
+                    <div id="filters-ok"></div>
+                    <div id="filters-cancel"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="analysis-popup">
+            <div id="analysis-content">
+                <div class="edit-label">Revenue Analysis</div>
+                <div id="revenue-analysis"></div>
+                <div class="edit-actions">
+                    <div id="analysis-close"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+﻿@using DevAV.Models
+
+@{
+    Layout = "~/Views/Layout.cshtml";
+    ViewBag.Title = "Products";
+    Dictionary<string, string> FilterMenu = new Dictionary<string, string>(){
+        {"All", ""},
+        {"Video Players", "Video Players"},
+        {"Televisions", "Televisions"},
+        {"Monitors", "Monitors"},
+        {"Projectors", "Projectors"},
+        {"Automation", "Automation"}
+
+    };
+
+    ViewBag.FilterMenu = FilterMenu;
+    ViewBag.MenuHeader = "Category";
+
+    var db = new DevAVContext();
+    var allStates = db.States.Select(e => new { ID = e.Sate_ID, Name = e.State_Long, ShortName = e.State_Short });
+
+}
+
+<script>
+    window.DevAV = window.DevAV || {};
+    DevAV.allStates = @Html.Raw(Json.Encode(allStates));
+    DevAV.allStatesByKey = {};
+
+    $.each(DevAV.allStates, function (_, item) {
+        DevAV.allStatesByKey[item.ID] = {
+            Name: item.Name,
+            ShortName: item.ShortName
+        }
+    });
+</script>
+
+<div id="grid" class="product"></div>
+<div class="info">
+    <div class="about">
+        <div class="name"></div>
+        <div class="rating-container">
+            <div class="rating"></div>
+        </div>
+        <div class="photo">
+            <div class="image"></div>
+            <div class="engineer">Lead Engineer<br><span>&nbsp;</span></div>
+            <div class="support">Support Tech<br><span>&nbsp;</span></div>
+        </div>
+        <div class="description"></div>
+    </div>
+    <div class="sections">
+        <div class="tabs"></div>
+        <div class="tabs-container">
+            <div class="tabs-content"></div>
+            <div class="popupImage"></div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+
+<div id="edit-backorder-popup">
+    <div id="edit-backorder">
+        <div class="edit-label" id="text-label">Edit Backorder</div>
+        <div class="backorder-info"></div>
+        <div class="edit-actions">
+            <div id="text-save"></div>
+            <div id="text-cancel"></div>
+        </div>
+    </div>
+</div>
+

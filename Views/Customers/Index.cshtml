@@ -1,0 +1,66 @@
+﻿@using DevAV.Models
+
+@{
+    ViewBag.Title = "Customers";
+    Layout = "~/Views/Layout.cshtml";
+
+    Dictionary<string, string> FilterMenu = new Dictionary<string, string>(){
+        {"All", ""},
+        {"California", "California"},
+        {"Illinois", "Illinois"},
+        {"Georgia", "Georgia"},
+        {"Minnesota", "Minnesota"}
+    };
+
+    ViewBag.FilterMenu = FilterMenu;
+
+    ViewBag.MenuHeader = "State";
+
+    var db = new DevAVContext();
+    var allStates = db.States.Select(e => new { ID = e.Sate_ID, Name = e.State_Long, ShortName = e.State_Short });
+}
+
+<script>
+    window.DevAV = window.DevAV || {};
+    DevAV.allStates = @Html.Raw(Json.Encode(allStates));
+    DevAV.allStatesByKey = {};
+
+    $.each(DevAV.allStates, function (_, item) {
+        DevAV.allStatesByKey[item.ID] = {
+            Name: item.Name,
+            ShortName: item.ShortName
+        }
+    });
+</script>
+
+<div id="grid" class="customers"></div>
+<div class="info customers-info">
+    <div class="info-title info-dropdown-menu">
+        <span id="customer-name"></span>
+        <div id="customer-category"></div>
+    </div>
+    <div id="customers-gallery"></div>
+    <div id="customer-category-items"></div>
+</div>
+
+<div id="edit-contact-popup">
+    <div id="edit-contact">
+        <div class="edit-label" id="grid-edit-label"></div>
+        <div class="contact-info"></div>
+        <div class="edit-actions">
+            <div id="contact-save"></div>
+            <div id="contact-cancel"></div>
+        </div>
+    </div>
+</div>
+
+<div id="edit-customer-popup">
+    <div id="edit-customer">
+        <div class="edit-label" id="grid-details-label"></div>
+        <div class="customer-info"></div>
+        <div class="edit-actions">
+            <div id="customer-details-cancel"></div>
+        </div>
+    </div>
+</div>
+

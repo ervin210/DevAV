@@ -1,0 +1,40 @@
+﻿@using DevAV.Models
+
+@{
+    ViewBag.Title = "Tasks";
+    Layout = "~/Views/Layout.cshtml";
+
+    Dictionary<string, string> FilterMenu = new Dictionary<string, string>(){
+        {"All", ""},
+        {"Not Started", "Not Started"},
+        {"In Progress", "In Progress"},
+        {"Need Assistance", "Need Assistance"},
+        {"Deferred", "Deferred"},
+        {"Completed", "Completed"}
+    };
+
+    ViewBag.FilterMenu = FilterMenu;
+    ViewBag.MenuHeader = "Status";
+
+    var db = new DevAVContext();
+    var employees = db.Employees.Select(e => new { ID = e.Employee_ID, Name = e.Employee_Full_Name });
+}
+
+<script>
+    window.DevAV = window.DevAV || {};
+    DevAV.employees = @Html.Raw(Json.Encode(employees));
+</script>
+
+<div id="grid" class="tasks"></div>
+
+<div id="edit-task-popup">
+    <div id="edit-task">
+        <div class="edit-label" id="task-edit-label"></div>
+        <div class="task-info"></div>
+        <div class="edit-actions">
+            <div id="task-save"></div>
+            <div id="task-cancel"></div>
+        </div>
+    </div>
+</div>
+
