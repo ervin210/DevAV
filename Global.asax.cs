@@ -1,4 +1,4 @@
-﻿using DevAv.App_Start;
+using DevAv.App_Start;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +16,8 @@ namespace DevAV
     {
         protected void Application_Start()
         {
+			DevExtremeBundleConfig.RegisterBundles(BundleTable.Bundles);
+
             AreaRegistration.RegisterAllAreas();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             WebApiConfig.Register(GlobalConfiguration.Configuration);
